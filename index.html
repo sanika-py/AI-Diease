@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantum Coder | AI Disease Prediction</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      scroll-behavior: smooth;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    }
+    
+    .hero-pattern {
+      background: radial-gradient(circle at 10% 20%, rgba(244, 114, 182, 0.1) 0%, transparent 20%),
+                  radial-gradient(circle at 80% 10%, rgba(244, 114, 182, 0.1) 0%, transparent 25%);
+    }
+    
+    .feature-card, .team-card {
+      transition: all 0.3s ease;
+      border: 1px solid rgba(244, 114, 182, 0.1);
+    }
+    
+    .feature-card:hover, .team-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(244, 114, 182, 0.25);
+      border-color: rgba(244, 114, 182, 0.3);
+    }
+    
+    .demo-container {
+      background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+      border: 1px solid rgba(244, 114, 182, 0.1);
+    }
+    
+    .symptom-pill {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .symptom-pill.active {
+      background-color: #db2777;
+      color: white;
+    }
+    
+    .prediction-circle {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: conic-gradient(#db2777 0%, #1f2937 0%);
+      transition: all 1s ease;
+    }
+    
+    .prediction-circle::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      background: #111827;
+      border-radius: 50%;
+    }
+    
+    .circle-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 10;
+    }
+    
+    .typewriter {
+      overflow: hidden;
+      border-right: 2px solid #db2777;
+      white-space: nowrap;
+      margin: 0 auto;
+      animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+    }
+    
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: #db2777 }
+    }
+    
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(219, 39, 119, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(219, 39, 119, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(219, 39, 119, 0); }
+    }
+    
+    /* Smooth scrolling for all browsers */
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    /* Improved transitions */
+    .smooth-transition {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Tab styling */
+    .tab-button {
+      transition: all 0.3s ease;
+    }
+    
+    .tab-button.active {
+      background-color: #db2777;
+      color: white;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    /* Video container */
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+      height: 0;
+      overflow: hidden;
+      border-radius: 0.75rem;
+    }
+    
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    
+    /* GitHub card styling */
+    .github-card {
+      transition: all 0.3s ease;
+    }
+    
+    .github-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(244, 114, 182, 0.25);
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-white">
+
+  <!-- Navbar -->
+  <header class="fixed w-full z-50 bg-gray-900/90 backdrop-blur-md border-b border-gray-800">
+    <div class="max-w-7xl mx-auto px-6 flex items-center justify-between py-4">
+      <div class="flex items-center">
+        <h1 class="text-2xl font-bold text-pink-500 flex items-center">
+          <i class="ph-brain text-pink-500 mr-2"></i>Quantum Coder
+        </h1>
+      </div>
+      <nav class="hidden md:flex space-x-8">
+        <a href="#features" class="hover:text-pink-400 transition-colors">Features</a>
+        <a href="#how" class="hover:text-pink-400 transition-colors">How It Works</a>
+        <a href="#demo" class="hover:text-pink-400 transition-colors">Demo</a>
+        <a href="#team" class="hover:text-pink-400 transition-colors">Team</a>
+        <a href="#faq" class="hover:text-pink-400 transition-colors">FAQ</a>
+        <a href="#contact" class="hover:text-pink-400 transition-colors">Contact</a>
+      </nav>
+      <button class="md:hidden text-gray-400" id="mobileMenuButton">
+        <i class="ph-list text-2xl"></i>
+      </button>
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div class="hidden md:hidden bg-gray-900 border-t border-gray-800" id="mobileMenu">
+      <div class="px-6 py-4 space-y-4">
+        <a href="#features" class="block hover:text-pink-400 transition-colors">Features</a>
+        <a href="#how" class="block hover:text-pink-400 transition-colors">How It Works</a>
+        <a href="#demo" class="block hover:text-pink-400 transition-colors">Demo</a>
+        <a href="#team" class="block hover:text-pink-400 transition-colors">Team</a>
+        <a href="#faq" class="block hover:text-pink-400 transition-colors">FAQ</a>
+        <a href="#contact" class="block hover:text-pink-400 transition-colors">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="pt-32 pb-20 text-center relative overflow-hidden gradient-bg hero-pattern">
+    <div class="absolute inset-0 bg-gradient-to-b from-pink-500/10 via-transparent to-transparent pointer-events-none"></div>
+    <div class="max-w-4xl mx-auto px-6">
+      <h2 class="text-5xl md:text-6xl font-extrabold mb-6">AI-Powered <span class="text-pink-500">Disease Prediction</span></h2>
+      <p class="max-w-2xl mx-auto text-gray-400 mb-8 text-lg">Revolutionizing healthcare with machine learning algorithms that predict diseases early and accurately.</p>
+      <div class="space-x-4">
+        <a href="#demo" class="px-6 py-3 bg-pink-600 hover:bg-pink-500 rounded-xl font-medium transition-colors pulse">Live Demo</a>
+        <a href="#features" class="px-6 py-3 border border-pink-500 hover:bg-pink-600 rounded-xl font-medium transition-colors">Explore Features</a>
+      </div>
+    </div>
+    <div class="mt-16 floating">
+      <i class="ph-arrow-down text-4xl text-pink-500"></i>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="py-20 max-w-6xl mx-auto px-6">
+    <h3 class="text-3xl font-bold text-center mb-4">Core Features</h3>
+    <p class="text-gray-400 text-center max-w-2xl mx-auto mb-14">Our AI disease prediction system combines cutting-edge technology with user-friendly design</p>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="feature-card bg-gray-900 p-6 rounded-2xl">
+        <i class="ph-brain text-pink-500 text-4xl mb-4"></i>
+        <h4 class="text-xl font-semibold mb-2">AI Intelligence</h4>
+        <p class="text-gray-400">Advanced machine learning algorithms analyze symptoms and predict diseases with high accuracy.</p>
+      </div>
+      <div class="feature-card bg-gray-900 p-6 rounded-2xl">
+        <i class="ph-device-mobile text-pink-500 text-4xl mb-4"></i>
+        <h4 class="text-xl font-semibold mb-2">Responsive Design</h4>
+        <p class="text-gray-400">Seamless experience across all devices with a modern, intuitive interface.</p>
+      </div>
+      <div class="feature-card bg-gray-900 p-6 rounded-2xl">
+        <i class="ph-shield-check text-pink-500 text-4xl mb-4"></i>
+        <h4 class="text-xl font-semibold mb-2">Data Security</h4>
+        <p class="text-gray-400">End-to-end encryption ensures your health data remains private and secure.</p>
+      </div>
+      <div class="feature-card bg-gray-900 p-6 rounded-2xl">
+        <i class="ph-gauge text-pink-500 text-4xl mb-4"></i>
+        <h4 class="text-xl font-semibold mb-2">Real-time Analysis</h4>
+        <p class="text-gray-400">Instant results with our optimized processing pipeline and cloud infrastructure.</p>
+      </div>
+      <div class="feature-card bg-gray-900 p-6 rounded-2xl">
+        <i class="ph-user-circle text-pink-500 text-4xl mb-4"></i>
+        <h4 class="text-xl font-semibold mb-2">Personalized Reports</h4>
+        <p class="text-gray-400">Customized health insights and recommendations based on your unique profile.</p>
+      </div>
+      <div class="feature-card bg-gray-900 p-6 rounded-2xl">
+        <i class="ph-trend-up text-pink-500 text-4xl mb-4"></i>
+        <h4 class="text-xl font-semibold mb-2">Health Tracking</h4>
+        <p class="text-gray-400">Monitor your health trends over time with detailed analytics and visualizations.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how" class="py-20 bg-gray-900/40">
+    <h3 class="text-3xl font-bold text-center mb-4">How It Works</h3>
+    <p class="text-gray-400 text-center max-w-2xl mx-auto mb-14">Our three-step process makes disease prediction simple and accessible</p>
+    <div class="max-w-5xl mx-auto px-6 grid md:grid-cols-3 gap-10 text-center">
+      <div class="floating">
+        <div class="text-5xl mb-4 text-pink-500 bg-gray-800 w-20 h-20 rounded-full flex items-center justify-center mx-auto">1</div>
+        <h4 class="text-xl font-semibold mb-2">Input Symptoms</h4>
+        <p class="text-gray-400">Enter your symptoms through our intuitive interface or connect health monitoring devices.</p>
+      </div>
+      <div class="floating" style="animation-delay: 0.5s;">
+        <div class="text-5xl mb-4 text-pink-500 bg-gray-800 w-20 h-20 rounded-full flex items-center justify-center mx-auto">2</div>
+        <h4 class="text-xl font-semibold mb-2">AI Analysis</h4>
+        <p class="text-gray-400">Our algorithms process your data against millions of data points to identify patterns.</p>
+      </div>
+      <div class="floating" style="animation-delay: 1s;">
+        <div class="text-5xl mb-4 text-pink-500 bg-gray-800 w-20 h-20 rounded-full flex items-center justify-center mx-auto">3</div>
+        <h4 class="text-xl font-semibold mb-2">Get Results</h4>
+        <p class="text-gray-400">Receive detailed predictions, risk assessments, and recommended next steps.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo -->
+  <section id="demo" class="py-20 max-w-6xl mx-auto px-6">
+    <h3 class="text-3xl font-bold text-center mb-4">Interactive Demo</h3>
+    <p class="text-gray-400 text-center max-w-2xl mx-auto mb-14">Try our symptom checker to see how our AI prediction works</p>
+    
+    <!-- Demo Tabs -->
+    <div class="flex space-x-2 mb-6 justify-center">
+      <button class="tab-button px-4 py-2 rounded-lg bg-gray-800 active" data-tab="symptom-checker">Symptom Checker</button>
+      <button class="tab-button px-4 py-2 rounded-lg bg-gray-800" data-tab="video-demo">Video Demo</button>
+      <button class="tab-button px-4 py-2 rounded-lg bg-gray-800" data-tab="github">GitHub Repository</button>
+    </div>
+    
+    <!-- Symptom Checker Tab -->
+    <div class="tab-content active" id="symptom-checker">
+      <div class="demo-container rounded-2xl p-8">
+        <div class="flex flex-col md:flex-row items-center gap-10">
+          <div class="flex-1 flex flex-col items-center">
+            <div class="prediction-circle mb-6" id="predictionCircle">
+              <div class="circle-text">
+                <span class="text-3xl font-bold text-white" id="probabilityText">0%</span>
+                <div class="text-pink-500 text-sm mt-1" id="diseaseText">Select Symptoms</div>
+              </div>
+            </div>
+            <div class="text-center">
+              <h4 class="text-xl font-semibold mb-2">Prediction Results</h4>
+              <p class="text-gray-400 text-sm">Our AI will analyze your symptoms and provide a risk assessment</p>
+            </div>
+          </div>
+          
+          <div class="flex-1">
+            <h4 class="text-xl font-semibold mb-4">Select Your Symptoms</h4>
+            <div class="symptom-selector grid grid-cols-2 gap-3 mb-6">
+              <div class="symptom-pill bg-gray-800 p-3 rounded-lg text-center" data-symptom="fever">Fever</div>
+              <div class="symptom-pill bg-gray-800 p-3 rounded-lg text-center" data-symptom="cough">Cough</div>
+              <div class="symptom-pill bg-gray-800 p-3 rounded-lg text-center" data-symptom="headache">Headache</div>
+              <div class="symptom-pill bg-gray-800 p-3 rounded-lg text-center" data-symptom="fatigue">Fatigue</div>
+              <div class="symptom-pill bg-gray-800 p-3 rounded-lg text-center" data-symptom="breathing">Breathing Issues</div>
+              <div class="symptom-pill bg-gray-800 p-3 rounded-lg text-center" data-symptom="chest">Chest Pain</div>
+            </div>
+            
+            <button id="predictBtn" class="w-full py-3 bg-pink-600 hover:bg-pink-500 rounded-xl font-medium transition-colors">
+              Analyze Symptoms
+            </button>
+            
+            <div class="mt-6 p-4 bg-gray-800 rounded-xl hidden" id="recommendationBox">
+              <h5 class="font-semibold mb-2 text-pink-400">Recommendations</h5>
+              <p class="text-sm text-gray-400" id="recommendationText">Based on your symptoms, we recommend consulting a healthcare professional.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Video Demo Tab -->
+    <div class="tab-content" id="video-demo">
+      <div class="demo-container rounded-2xl p-8">
+        <h4 class="text-xl font-semibold mb-4 text-center">Project Demonstration Video</h4>
+        <p class="text-gray-400 text-center mb-6">Watch our video to see the full functionality of our AI disease prediction system</p>
+        
+        <div class="video-container">
+          <!-- Replace with your actual YouTube video ID -->
+          <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Quantum Coder Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="mt-6 text-center">
+          <a href="https://www.youtube.com/channel/your-channel" target="_blank" class="inline-flex items-center text-pink-500 hover:text-pink-400">
+            <i class="ph-youtube-logo mr-2 text-xl"></i>
+            Visit our YouTube channel for more videos
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- GitHub Tab -->
+    <div class="tab-content" id="github">
+      <div class="demo-container rounded-2xl p-8">
+        <h4 class="text-xl font-semibold mb-4 text-center">GitHub Repository</h4>
+        <p class="text-gray-400 text-center mb-6">Explore our codebase, contribute, or report issues on GitHub</p>
+        
+        <div class="github-card bg-gray-800 p-6 rounded-xl max-w-md mx-auto">
+          <div class="flex items-center mb-4">
+            <i class="ph-github-logo text-3xl mr-3"></i>
+            <h5 class="text-lg font-semibold">QuantumCoder/AI-Disease-Prediction</h5>
+          </div>
+          <p class="text-gray-400 mb-4">AI-powered disease prediction system using machine learning algorithms to analyze symptoms and predict potential health issues.</p>
+          
+          <div class="flex justify-between text-sm text-gray-500 mb-4">
+            <span><i class="ph-star mr-1"></i> 128 stars</span>
+            <span><i class="ph-git-fork mr-1"></i> 42 forks</span>
+            <span><i class="ph-eye mr-1"></i> 256 watching</span>
+          </div>
+          
+          <div class="flex space-x-3">
+            <a href="https://github.com/QuantumCoder/AI-Disease-Prediction" target="_blank" class="flex-1 py-2 bg-pink-600 hover:bg-pink-500 text-center rounded-lg transition-colors">
+              View Repository
+            </a>
+            <a href="https://github.com/QuantumCoder/AI-Disease-Prediction/issues" target="_blank" class="flex-1 py-2 border border-pink-500 hover:bg-pink-600 text-center rounded-lg transition-colors">
+              Report Issue
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section id="team" class="py-20 bg-gray-900/40">
+    <h3 class="text-3xl font-bold text-center mb-4">Meet Our Team</h3>
+    <p class="text-gray-400 text-center max-w-2xl mx-auto mb-14">The talented developers behind this innovative project</p>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
+      <!-- Kishor Irnak -->
+      <div class="team-card bg-gray-900 p-6 rounded-2xl text-center">
+        <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-pink-500 to-purple-600 mb-4 flex items-center justify-center text-4xl text-white">
+          KI
+        </div>
+        <h4 class="text-xl font-semibold">Kishor Irnak</h4>
+        <p class="text-gray-400 mb-3">Front-End Developer</p>
+        <div class="flex justify-center gap-4">
+          <a href="#" class="hover:text-pink-400 transition-colors"><i class="ph-github-logo text-xl"></i></a>
+          <a href="#" class="hover:text-pink-400 transition-colors"><i class="ph-linkedin-logo text-xl"></i></a>
+        </div>
+      </div>
+
+      <!-- Noman Ahmed Kadiwal -->
+      <div class="team-card bg-gray-900 p-6 rounded-2xl text-center">
+        <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-pink-500 to-purple-600 mb-4 flex items-center justify-center text-4xl text-white">
+          NK
+        </div>
+        <h4 class="text-xl font-semibold">Noman Ahmed Kadiwal</h4>
+        <p class="text-gray-400 mb-3">AI/ML Developer</p>
+        <div class="flex justify-center gap-4">
+          <a href="#" class="hover:text-pink-400 transition-colors"><i class="ph-github-logo text-xl"></i></a>
+          <a href="#" class="hover:text-pink-400 transition-colors"><i class="ph-linkedin-logo text-xl"></i></a>
+        </div>
+      </div>
+
+      <!-- Anmol Late -->
+      <div class="team-card bg-gray-900 p-6 rounded-2xl text-center">
+        <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-pink-500 to-purple-600 mb-4 flex items-center justify-center text-4xl text-white">
+          AL
+        </div>
+        <h4 class="text-xl font-semibold">Anmol Late</h4>
+        <p class="text-gray-400 mb-3">Backend Developer</p>
+        <div class="flex justify-center gap-4">
+          <a href="#" class="hover:text-pink-400 transition-colors"><i class="ph-github-logo text-xl"></i></a>
+          <a href="#" class="hover:text-pink-400 transition-colors"><i class="ph-linkedin-logo text-xl"></i></a>
+        </div>
+      </div>
+
+      <!-- Sanika Choughule -->
+      <div class="team-card bg-gray-900 p-6 rounded-2xl text-center">
+        <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-pink-500 to-purple-600 mb-4 flex items-center justify-center text-4xl text-white">
+          SC
+        </div>
+        <h4 class="text-xl font-semibold">Sanika Choughule</h4>
+        <p class="text-gray-400 mb-3">Full Stack Developer</p>
+        <div class="flex justify-center gap-4">
+          <a href="#" class="hover:text-pink-400 transition-colors"><i class="ph-github-logo text-xl"></i></a>
+          <a href="#" class="hover:text-pink-400 transition-colors"><i class="ph-linkedin-logo text-xl"></i></a>
+        </div>
+      </div>
+
+      <!-- Anushka Naik -->
+      <div class="team-card bg-gray-900 p-6 rounded-2xl text-center">
+        <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-pink-500 to-purple-600 mb-4 flex items-center justify-center text-4xl text-white">
+          AN
+        </div>
+        <h4 class="text-xl font-semibold">Anushka Naik</h4>
+        <p class="text-gray-400 mb-3">Assistant Developer</p>
+        <div class="flex justify-center gap-4">
+          <a href="#" class="hover:text-pink-400 transition-colors"><i class="ph-github-logo text-xl"></i></a>
+          <a href="#" class="hover:text-pink-400 transition-colors"><i class="ph-linkedin-logo text-xl"></i></a>
+        </div>
+      </div>
+
+      <!-- Gayatri Kulkarni -->
+      <div class="team-card bg-gray-900 p-6 rounded-2xl text-center">
+        <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-pink-500 to-purple-600 mb-4 flex items-center justify-center text-4xl text-white">
+          GK
+        </div>
+        <h4 class="text-xl font-semibold">Gayatri Kulkarni</h4>
+        <p class="text-gray-400 mb-3">Assistant Developer</p>
+        <div class="flex justify-center gap-4">
+          <a href="#" class="hover:text-pink-400 transition-colors"><i class="ph-github-logo text-xl"></i></a>
+          <a href="#" class="hover:text-pink-400 transition-colors"><i class="ph-linkedin-logo text-xl"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="py-20 max-w-4xl mx-auto px-6">
+    <h3 class="text-3xl font-bold text-center mb-4">Frequently Asked Questions</h3>
+    <p class="text-gray-400 text-center max-w-2xl mx-auto mb-14">Find answers to common questions about our AI disease prediction system</p>
+    
+    <!-- FAQ Tabs -->
+    <div class="flex space-x-2 mb-6 justify-center">
+      <button class="tab-button px-4 py-2 rounded-lg bg-gray-800 active" data-tab="general-faq">General</button>
+      <button class="tab-button px-4 py-2 rounded-lg bg-gray-800" data-tab="technical-faq">Technical</button>
+      <button class="tab-button px-4 py-2 rounded-lg bg-gray-800" data-tab="privacy-faq">Privacy</button>
+    </div>
+    
+    <!-- General FAQ -->
+    <div class="tab-content active" id="general-faq">
+      <div class="space-y-4">
+        <div class="bg-gray-800 p-5 rounded-xl">
+          <button class="flex justify-between w-full faq-btn items-center">
+            <span class="text-left font-medium">What is this project about?</span>
+            <i class="ph-caret-down text-xl transition-transform"></i>
+          </button>
+          <p class="text-gray-400 mt-3 hidden">Our project uses advanced AI and machine learning algorithms to analyze symptoms and predict potential diseases with high accuracy, helping users identify health issues early.</p>
+        </div>
+        <div class="bg-gray-800 p-5 rounded-xl">
+          <button class="flex justify-between w-full faq-btn items-center">
+            <span class="text-left font-medium">How accurate is the prediction system?</span>
+            <i class="ph-caret-down text-xl transition-transform"></i>
+          </button>
+          <p class="text-gray-400 mt-3 hidden">Our AI model has been trained on thousands of medical cases and achieves an accuracy rate of over 92% for common diseases. However, it's important to consult healthcare professionals for definitive diagnoses.</p>
+        </div>
+        <div class="bg-gray-800 p-5 rounded-xl">
+          <button class="flex justify-between w-full faq-btn items-center">
+            <span class="text-left font-medium">How can I try the demo?</span>
+            <i class="ph-caret-down text-xl transition-transform"></i>
+          </button>
+          <p class="text-gray-400 mt-3 hidden">You can try our interactive demo above by selecting symptoms and clicking the "Analyze Symptoms" button. The demo will show you how our AI system works and provides risk assessments.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Technical FAQ -->
+    <div class="tab-content" id="technical-faq">
+      <div class="space-y-4">
+        <div class="bg-gray-800 p-5 rounded-xl">
+          <button class="flex justify-between w-full faq-btn items-center">
+            <span class="text-left font-medium">What technologies are used in this project?</span>
+            <i class="ph-caret-down text-xl transition-transform"></i>
+          </button>
+          <p class="text-gray-400 mt-3 hidden">We use a combination of machine learning frameworks like TensorFlow and PyTorch for the AI model, Flask for the backend API, and modern web technologies (HTML5, CSS3, JavaScript) for the frontend.</p>
+        </div>
+        <div class="bg-gray-800 p-5 rounded-xl">
+          <button class="flex justify-between w-full faq-btn items-center">
+            <span class="text-left font-medium">How is the model trained?</span>
+            <i class="ph-caret-down text-xl transition-transform"></i>
+          </button>
+          <p class="text-gray-400 mt-3 hidden">Our model is trained on a diverse dataset of anonymized medical records, with features including symptoms, patient demographics, and diagnostic outcomes. We use transfer learning and continuous training to improve accuracy.</p>
+        </div>
+        <div class="bg-gray-800 p-5 rounded-xl">
+          <button class="flex justify-between w-full faq-btn items-center">
+            <span class="text-left font-medium">Can I contribute to the project?</span>
+            <i class="ph-caret-down text-xl transition-transform"></i>
+          </button>
+          <p class="text-gray-400 mt-3 hidden">Yes! We welcome contributions. Please visit our GitHub repository to see open issues, feature requests, and contribution guidelines.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Privacy FAQ -->
+    <div class="tab-content" id="privacy-faq">
+      <div class="space-y-4">
+        <div class="bg-gray-800 p-5 rounded-xl">
+          <button class="flex justify-between w-full faq-btn items-center">
+            <span class="text-left font-medium">Is my health data secure?</span>
+            <i class="ph-caret-down text-xl transition-transform"></i>
+          </button>
+          <p class="text-gray-400 mt-3 hidden">Yes, we take data privacy very seriously. All health data is encrypted, and we comply with healthcare data protection regulations. Your information is never shared with third parties without consent.</p>
+        </div>
+        <div class="bg-gray-800 p-5 rounded-xl">
+          <button class="flex justify-between w-full faq-btn items-center">
+            <span class="text-left font-medium">What data do you collect?</span>
+            <i class="ph-caret-down text-xl transition-transform"></i>
+          </button>
+          <p class="text-gray-400 mt-3 hidden">We only collect the minimum necessary information to provide accurate predictions. This includes symptoms you input, but we don't store personally identifiable information unless you create an account and explicitly consent.</p>
+        </div>
+        <div class="bg-gray-800 p-5 rounded-xl">
+          <button class="flex justify-between w-full faq-btn items-center">
+            <span class="text-left font-medium">How is my data used?</span>
+            <i class="ph-caret-down text-xl transition-transform"></i>
+          </button>
+          <p class="text-gray-400 mt-3 hidden">Your data is used solely for the purpose of generating disease predictions. Anonymized data may be used to improve our models, but we never sell or share your personal information with third parties.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="py-20 bg-gray-900/40">
+    <h3 class="text-3xl font-bold text-center mb-4">Contact Us</h3>
+    <p class="text-gray-400 text-center max-w-2xl mx-auto mb-14">Have questions or want to collaborate? Get in touch with our team</p>
+    
+    <form class="max-w-2xl mx-auto space-y-6 px-6">
+      <input type="text" placeholder="Your Name" class="w-full p-4 bg-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500">
+      <input type="email" placeholder="Your Email" class="w-full p-4 bg-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500">
+      <textarea placeholder="Your Message" rows="5" class="w-full p-4 bg-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500"></textarea>
+      <button class="px-6 py-3 bg-pink-600 hover:bg-pink-500 rounded-xl w-full transition-colors">Send Message</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center py-8 text-gray-500 text-sm border-t border-gray-800">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+        <div class="text-pink-500 font-bold text-xl mb-4 md:mb-0">
+          <i class="ph-brain text-pink-500 mr-2"></i>
+        </div>
+        <div class="flex space-x-6">
+          <a href="#" class="hover:text-pink-400 transition-colors"><i class="ph-github-logo text-xl"></i></a>
+          <a href="#" class="hover:text-pink-400 transition-colors"><i class="ph-linkedin-logo text-xl"></i></a>
+          <a href="#" class="hover:text-pink-400 transition-colors"><i class="ph-twitter-logo text-xl"></i></a>
+          <a href="#" class="hover:text-pink-400 transition-colors"><i class="ph-instagram-logo text-xl"></i></a>
+        </div>
+      </div>
+      <p>© 2025 Quantum Coder. All rights reserved. | AI Disease Prediction Hackathon Project</p>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu functionality
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target) && !mobileMenu.classList.contains('hidden')) {
+        mobileMenu.classList.add('hidden');
+      }
+    });
+
+    // FAQ functionality
+    document.querySelectorAll('.faq-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const content = btn.nextElementSibling;
+        content.classList.toggle('hidden');
+        btn.querySelector('i').classList.toggle('rotate-180');
+      });
+    });
+
+    // Tab functionality
+    document.querySelectorAll('.tab-button').forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class from all buttons in the same tab group
+        const tabGroup = button.closest('.flex');
+        tabGroup.querySelectorAll('.tab-button').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        
+        // Add active class to clicked button
+        button.classList.add('active');
+        
+        // Hide all tab contents in this section
+        const section = button.closest('section');
+        const tabName = button.getAttribute('data-tab');
+        section.querySelectorAll('.tab-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        
+        // Show the selected tab content
+        document.getElementById(tabName).classList.add('active');
+      });
+    });
+
+    // Demo functionality
+    const symptomPills = document.querySelectorAll('.symptom-pill');
+    const predictBtn = document.getElementById('predictBtn');
+    const predictionCircle = document.getElementById('predictionCircle');
+    const probabilityText = document.getElementById('probabilityText');
+    const diseaseText = document.getElementById('diseaseText');
+    const recommendationBox = document.getElementById('recommendationBox');
+    const recommendationText = document.getElementById('recommendationText');
+
+    // Toggle symptom selection
+    symptomPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        pill.classList.toggle('active');
+      });
+    });
+
+    // Handle prediction
+    predictBtn.addEventListener('click', () => {
+      // Count selected symptoms
+      const selectedSymptoms = document.querySelectorAll('.symptom-pill.active');
+      
+      if (selectedSymptoms.length === 0) {
+        alert('Please select at least one symptom');
+        return;
+      }
+      
+      // Simulate prediction
+      simulatePrediction(selectedSymptoms);
+    });
+
+    // Simulate prediction
+    function simulatePrediction(selectedSymptoms) {
+      // Show loading state
+      predictBtn.textContent = 'Analyzing...';
+      predictBtn.disabled = true;
+      
+      // Simulate API call delay
+      setTimeout(() => {
+        // Random disease for demo
+        const diseases = [
+          { name: 'Common Cold', probability: 65, recommendation: 'Rest, hydrate, and consider over-the-counter cold medicine.' },
+          { name: 'Influenza', probability: 72, recommendation: 'Get plenty of rest, stay hydrated, and consider antiviral medication if early in symptoms.' },
+          { name: 'COVID-19', probability: 85, recommendation: 'Isolate yourself, get tested, and consult a healthcare provider for guidance.' },
+          { name: 'Allergies', probability: 58, recommendation: 'Try antihistamines and avoid known allergens.' },
+          { name: 'Strep Throat', probability: 45, recommendation: 'Consult a doctor for a throat culture and possible antibiotics.' }
+        ];
+        
+        const randomDisease = diseases[Math.floor(Math.random() * diseases.length)];
+        
+        // Update UI with prediction
+        predictionCircle.style.background = `conic-gradient(#db2777 ${randomDisease.probability}%, #1f2937 0%)`;
+        probabilityText.textContent = `${randomDisease.probability}%`;
+        diseaseText.textContent = randomDisease.name;
+        recommendationText.textContent = randomDisease.recommendation;
+        recommendationBox.classList.remove('hidden');
+        
+        // Reset button
+        predictBtn.textContent = 'Analyze Symptoms';
+        predictBtn.disabled = false;
+      }, 1500);
+    }
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          // Close mobile menu if open
+          if (!mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+          }
+          
+          // Scroll to element
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
